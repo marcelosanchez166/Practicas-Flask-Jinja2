@@ -44,6 +44,36 @@ request.args.get('nombre')
     # request.form.getlist('nombre'), request.json.getlist('nombre'), request.data.getlist('nombre'), request.values.getlist('nombre')"""
 
 
+#Pasando datos a las plantillas
+personas = {"Nombre": "Marcelo", "Apellido": "Sanchez", "Edad": 29, "Dirección":"Santa Ana"}
+marcasVehiculos = ["Volvo", "Mercedes", "Jaguar", "Nissan", "Toyota", "Audi", "Kia", "Mazda", "Honda", ]
+
+
+@app.route("/datos", methods=["GET", "POST"])
+def datos():
+  if request.method =="POST":
+    genero = request.form.get('genero')
+    vehiculo1 = request.form.get("vehicle1")
+    vehiculo2 = request.form.get("vehicle2")
+    vehiculo3 = request.form.get("vehicle3")
+    print(genero, vehiculo1, vehiculo2, vehiculo3)
+    automovil = request.form.get("cars")
+    personas["Genero"] = genero
+    if vehiculo1:
+      personas['Vehiculo'] = vehiculo1
+    elif vehiculo2:
+      personas["Vehiculo"] = vehiculo2
+    elif vehiculo3:
+      personas["Vehiculo"] = vehiculo3
+    return render_template("datos.html", personas=personas, marcasVehiculos=marcasVehiculos, automovil=automovil)
+  else:
+    return render_template("datos.html", personas=personas, marcasVehiculos=marcasVehiculos)
+
+
+
+
+
+
 
 if __name__ == "__main__":
   app.run(debug=True, port=5001)
