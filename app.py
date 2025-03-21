@@ -56,23 +56,81 @@ def datos():
     vehiculo1 = request.form.get("vehicle1")
     vehiculo2 = request.form.get("vehicle2")
     vehiculo3 = request.form.get("vehicle3")
-    print(genero, vehiculo1, vehiculo2, vehiculo3)
     automovil = request.form.get("cars")
-    personas["Genero"] = genero
+    personas["Genero"] = genero#Agregando el genero enviado desde el formulario hacia el diccionario personas
+    opciones = request.form.getlist("opciones")#Obteniendo los datos de las opciones seleccionadas en el formulario
+    #selectmultiples = request.form.getlist("opcionesmultipleselect")#obteniendo el select multiple como una lista
+    selectmultiples = request.form.get("opcionesmultipleselect")#obteniendo el select multiple como valor de un solo elemento
+    print(type(selectmultiples), "tipo de objeto que se obtiene al seleccionar selectmultiples en el formulario")
+    for i in range(len(selectmultiples)):
+      print(selectmultiples[i], "opcion seleccionada en el formulario")
     if vehiculo1:
       personas['Vehiculo'] = vehiculo1
     elif vehiculo2:
       personas["Vehiculo"] = vehiculo2
     elif vehiculo3:
       personas["Vehiculo"] = vehiculo3
-    return render_template("datos.html", personas=personas, marcasVehiculos=marcasVehiculos, automovil=automovil)
+    return render_template("datos.html", personas=personas, marcasVehiculos=marcasVehiculos, automovil=automovil, opciones=opciones, selectmultiples=selectmultiples)
   else:
     return render_template("datos.html", personas=personas, marcasVehiculos=marcasVehiculos)
 
 
 
+@app.route('/dias', methods=["GET",'POST'])
+def dias():
+    datos_dias = []
+    days = ["lunes", "martes", "miércoles", "jueves", "viernes", "sábado", "domingo"]
+    # Procesar cada día de la semana
+    if request.method == 'POST':
+      for dia in days :
+        #los valores se obtienen del formulario y la variable dia es el valor la lista de dias llamada days
+          if request.form.get(f'dia_{dia}'):  # Verifica si el día fue seleccionado
+              hora_inicio = request.form.get(f'hora_inicio_{dia}')
+              hora_fin = request.form.get(f'hora_fin_{dia}')
+              prioridad = request.form.get(f'prioridad_{dia}')
+              notas = request.form.get(f'notas_{dia}')
+              comentarios = request.form.get(f'comentarios_{dia}')
+
+              # Almacena los datos del día en un diccionario
+              dia_data = {
+                  'dia': dia.capitalize(),
+                  'hora_inicio': hora_inicio,
+                  'hora_fin': hora_fin,
+                  'prioridad': prioridad,
+                  'notas': notas,
+                  'comentarios': comentarios
+              }
+              datos_dias.append(dia_data)
+      # Renderiza los datos o haz otra cosa con ellos
+      print(datos_dias)
+      return render_template("dias.html",datos_dias=datos_dias)
+    else:
+      return render_template("dias.html",datos_dias=datos_dias, days=days)
 
 
+ventas = {
+  "vendedor1": {"nombre":"Juan", "id": 1, "producto": "Camiseta", "cantidad": 2, "precio": 10.99},
+  "vendedor2": {"nombre":"Marco", "id": 2, "producto": "Pantalón", "cantidad": 1, "precio": 29.99}, 
+  "vendedor3": {"nombre":"Lucas", "id": 3, "producto": "Zapatos", "cantidad": 3, "precio": 39.99},
+  }
+
+print(type(ventas))
+@app.route('/prueba', methods=['POST', 'GET'])
+def prueba():
+  diccionario_horarios = {}
+  if request.method == 'POST':
+    days = ['lunes', 'martes', 'miercoles', 'jueves', 'viernes']
+    for dia in days:
+      if request.form.get(f'dias[{dia}]'):
+        hora_inicio = request.form.get(f'horas[{dia}][inicio]')
+        hora_fin = request.form.get(f'horas[{dia}][fin]')
+        diccionario_horarios[dia] = {
+          "hora_inicio": hora_inicio,
+          "hora_fin": hora_fin
+          }
+    print(diccionario_horarios)
+    return render_template('agrupandoelementos.html', diccionario_horarios=diccionario_horarios, ventas=ventas)
+  return render_template('agrupandoelementos.html', diccionario_horarios=diccionario_horarios, ventas=ventas)
 
 
 if __name__ == "__main__":

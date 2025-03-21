@@ -11,45 +11,78 @@
 
     <ul>
         {% if personas %}
-            <li>{{personas.Nombre}}</li>
-            <li>{{personas.Apellido}}</li>
-            <li>{{personas.Edad}}</li>
-            <li>{{personas.Dirección}}</li>
-            <li>{{personas.Genero}}</li>
-            <li>{{personas.Vehiculo}}</li>
+        <li>{{personas.Nombre}}</li>
+        <li>{{personas.Apellido}}</li>
+        <li>{{personas.Edad}}</li>
+        <li>{{personas.Dirección}}</li>
+        {% if personas.Genero and personas.Vehiculo %}
+        <li>{{personas.Genero}}</li>
+        <li>{{personas.Vehiculo}}</li>
+        {% endif %}
         {% endif %}
     </ul>
-<form action="{{url_for('datos')}}" method="post">
-    <label for="">Generos: </label>
-    <label><input type="radio" name="genero" value="masculino"> Masculino </label>
-    <label><input type="radio" name="genero" value="femenino"> Femenino </label>
+    <form action="{{url_for('datos')}}" method="post">
+        <label for="">Generos: </label>
+        <label><input type="radio" name="genero" value="masculino"> Masculino </label>
+        <label><input type="radio" name="genero" value="femenino"> Femenino </label>
+        <br>
+        <label for="">Tienes Vehiculo: </label>
+        <br>
+        <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike">
+        <label for="vehicle1"> I have a bike</label><br>
+        <input type="checkbox" id="vehicle2" name="vehicle2" value="Car">
+        <label for="vehicle2"> I have a car</label><br>
+        <input type="checkbox" id="vehicle3" name="vehicle3" value="Boat">
+        <label for="vehicle3"> I have a boat</label><br>
+        <br>
+        <input type="submit" value="Enviar datos">
+    </form>
     <br>
-    <label for="">Tienes Vehiculo: </label>
     <br>
-    <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike">
-    <label for="vehicle1"> I have a bike</label><br>
-    <input type="checkbox" id="vehicle2" name="vehicle2" value="Car">
-    <label for="vehicle2"> I have a car</label><br>
-    <input type="checkbox" id="vehicle3" name="vehicle3" value="Boat">
-    <label for="vehicle3"> I have a boat</label><br>
+    <form action="{{url_for('datos')}}" method="post">
+        <label for="cars">Choose a car:</label>
+        <select name="cars" id="cars">
+            {% for vehiculo in marcasVehiculos %}
+            <option value="{{vehiculo}}" {{"selected='selected'" if cars==vehiculo}} >{{vehiculo}}</option>
+            {% endfor %}
+        </select>
     <br>
-    <input type="submit" value="Enviar datos">
-</form>
+    <button type=" submit">Enviar</button>
+    </form>
+    {% if automovil %}
+    <label for="">Automovil que eligio el usuario <li>{{automovil}}</li></label>
+    {% endif %}
 
-<br>
-<br>
-<form action="{{url_for('datos')}}" method="post">
-  <label for="cars">Choose a car:</label>
-  <select name="cars" id="cars">
-    {% for vehiculo in marcasVehiculos %}
-        <option value="{{vehiculo}}" {{"selected = 'selected'" if cars==vehiculo}} >{{vehiculo}}</option>
+
+    <form method="POST" action="{{url_for('datos')}}">
+        <label><input type="checkbox" name="opciones" value="valor1"> Opción 1</label>
+        <label><input type="checkbox" name="opciones" value="valor2"> Opción 2</label>
+        <label><input type="checkbox" name="opciones" value="valor3"> Opción 3</label>
+        <button type="submit">Enviar</button>
+    </form>
+
+    {% if opciones %}
+    {% for opcion in opciones %}
+    <p>Has seleccionado las siguientes opciones: {{ opcion }}</p>
     {% endfor %}
-  </select>
-  <br>
-  <button type="submit">Enviar</button>
-</form>
+    {% endif %}
 
-<label for="">Automovil que eligio el usuario <li>{{automovil}}</li></label>
+
+    <label for="">Select Multiples</label>
+    <form method="POST" action="{{url_for('datos')}}">
+        <select name="opcionesmultipleselect" multiple>
+            <option value="valor1">Opción 1</option>
+            <option value="valor2">Opción 2</option>
+            <option value="valor3">Opción 3</option>
+        </select>
+        <button type="submit">Enviar</button>
+    </form>
+
+    {% if selectmultiples %}
+
+    <p>Has seleccionado las siguientes opciones del select multiple: {{ selectmultiples }}</p>
+
+    {% endif %}
 
 </body>
 

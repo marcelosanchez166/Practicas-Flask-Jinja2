@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+
+  <form method="POST" action="{{url_for('dias')}}">
+    {% for dia in days %}
+    <fieldset>
+      <legend>{{ dia.capitalize() }}</legend>
+
+      <!-- Checkbox para seleccionar el día -->
+      <label>
+        Seleccionar:
+        <br>
+        {{ dia.capitalize() }} <input type="checkbox" name="dia_{{ dia }}" value="{{ dia }}">
+      </label>
+      <br>
+
+      <!-- Select para la hora de inicio -->
+      <label for="hora_inicio_{{ dia }}">Hora de Inicio:</label>
+      <select name="hora_inicio_{{ dia }}">
+        <option value="12:00">12:00</option>
+        <option value="13:00">13:00</option>
+        <option value="14:00">14:00</option>
+        <option value="15:00">15:00</option>
+        <option value="16:00">16:00</option>
+        <option value="17:00">17:00</option>
+        <option value="18:00">18:00</option>
+      </select>
+      <br>
+
+      <!-- Select para la hora de fin -->
+      <label for="hora_fin_{{ dia }}">Hora de Fin:</label>
+      <select name="hora_fin_{{ dia }}">
+        <option value="13:00">13:00</option>
+        <option value="14:00">14:00</option>
+        <option value="15:00">15:00</option>
+        <option value="16:00">16:00</option>
+        <option value="17:00">17:00</option>
+        <option value="18:00">18:00</option>
+        <option value="19:00">19:00</option>
+      </select>
+      <br>
+
+      <!-- Radio button para elegir prioridad -->
+      <label for="prioridad_{{ dia }}">Prioridad:</label>
+      <input type="radio" name="prioridad_{{ dia }}" value="alta"> Alta
+      <input type="radio" name="prioridad_{{ dia }}" value="media"> Media
+      <input type="radio" name="prioridad_{{ dia }}" value="baja"> Baja
+      <br>
+
+      <!-- Input de texto para notas adicionales -->
+      <label for="notas_{{ dia }}">Notas:</label>
+      <input type="text" name="notas_{{ dia }}" placeholder="Notas adicionales">
+      <br>
+
+      <!-- Textarea para comentarios -->
+      <label for="comentarios_{{ dia }}">Comentarios:</label>
+      <textarea name="comentarios_{{ dia }}" rows="3" cols="40"></textarea>
+    </fieldset>
+    <hr>
+    {% endfor %}
+
+    <button type="submit">Enviar</button>
+  </form>
+
+  {% if datos_dias %}
+  <h2>Datos de los días seleccionados:</h2>
+  <!-- Recorriendo la lista: -->
+    {% for dia in datos_dias %}
+    <!-- Recorriendo el diccionario interno de la lista -->
+      {% for values in dia.values() %}
+        <ul>{{values}}</ul>
+      {% endfor %}
+    {%endfor%}
+  {% endif %}
+
+</body>
+
+</html>
