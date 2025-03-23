@@ -70,16 +70,37 @@
     <button type="submit">Enviar</button>
   </form>
 
-  {% if datos_dias %}
-  <h2>Datos de los días seleccionados:</h2>
-  <!-- Recorriendo la lista: -->
-    {% for dia in datos_dias %}
-    <!-- Recorriendo el diccionario interno de la lista -->
-      {% for values in dia.values() %}
-        <ul>{{values}}</ul>
-      {% endfor %}
-    {%endfor%}
-  {% endif %}
+
+  <table border="2" style="text-align: center;">
+    <tr>
+      <th colspan="6">
+        <h2>Datos de los días seleccionados:</h2>
+      </th>
+    </tr>
+    <tr>
+      <th>Dia</th>
+      <th>Hora inicio</th>
+      <th>Hora fin</th>
+      <th>Prioridad</th>
+      <th>Notas</th>
+      <th>Comentarios</th>
+    </tr>
+    <tr>
+        {% if datos_dias %}
+        <!-- Recorriendo la lista: -->
+          {% for dia in datos_dias %}
+          <!-- Recorriendo el diccionario interno de la lista -->
+            {% for values in dia.values() %}
+            <td>
+              <ul>{{values}}</ul>
+            </td>
+            {% endfor %}
+          {%endfor%}
+        {% endif %}
+    </tr>
+
+  </table>
+
 
 </body>
 

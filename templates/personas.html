@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  {% if person %}
+  <table border="2" style="align-items: center;">
+    <tr>
+      <th>Nombre</th>
+      <th>Apellido</th>
+      <th>Direccion</th>
+    </tr>
+    {% for data in person %}
+    <tr>
+      <td>{{data.nombre}}</td>
+      <td>{{data.apellido}}</td>
+      <td>{{data.direccion}}</td>
+    </tr>
+    {%endfor%}
+  </table>
+
+  {% endif %}
+</body>
+
+</html>

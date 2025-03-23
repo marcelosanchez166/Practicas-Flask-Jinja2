@@ -1,8 +1,16 @@
 from flask import Flask, render_template, request, make_response
 import datetime
 
+import sqlite3
+
+
 app = Flask(__name__)
 
+
+def get_db_connection():
+    conn = sqlite3.connect("example.db", check_same_thread=False)
+    conn.row_factory = sqlite3.Row
+    return conn
 
 """Practicando COOKIES"""
 @app.route('/', methods=['GET', 'POST'])
@@ -62,8 +70,7 @@ def datos():
     #selectmultiples = request.form.getlist("opcionesmultipleselect")#obteniendo el select multiple como una lista
     selectmultiples = request.form.get("opcionesmultipleselect")#obteniendo el select multiple como valor de un solo elemento
     print(type(selectmultiples), "tipo de objeto que se obtiene al seleccionar selectmultiples en el formulario")
-    for i in range(len(selectmultiples)):
-      print(selectmultiples[i], "opcion seleccionada en el formulario")
+
     if vehiculo1:
       personas['Vehiculo'] = vehiculo1
     elif vehiculo2:
@@ -133,5 +140,49 @@ def prueba():
   return render_template('agrupandoelementos.html', diccionario_horarios=diccionario_horarios, ventas=ventas)
 
 
+Personass = [
+  {"nombre":"Juan",  "apellido": "Hernandez", "direccion":  "Calle 1"},
+  {"nombre":"Marco",  "apellido": "Ramirez", "direccion": "Calle 2"},
+  {"nombre":"Lucas",  "apellido": "Garcia", "direccion": "Calle 3"}
+]
+
+
+def crear_tabla():
+  conn = get_db_connection()
+  conn.execute("""CREATE TABLE IF NOT EXISTS personas (
+  id INTEGER PRIMARY KEY AUTOINCREMENT, 
+  nombre TEXT, 
+  apellido TEXT, 
+  direccion TEXT
+  )""")
+  conn.commit()
+  conn.close()
+
+
+def insertar_datos():
+  conn = get_db_connection()
+  for persona in Personass:
+    nombre = persona["nombre"]
+    apellido = persona["apellido"]
+    direccion = persona["direccion"]
+    print(nombre, apellido, direccion)
+    conn.execute("""INSERT INTO personas (nombre, apellido, direccion) VALUES (?, ?, ?)""", (nombre, apellido, direccion))
+  conn.commit()
+  conn.close()
+
+
+@app.route('/personas', methods=['POST', 'GET'])
+def personas():
+  conn = get_db_connection()
+  data = conn.execute("""SELECT * FROM personas""").fetchall()
+  person = [ {'id': row[0], 'nombre': row[1], 'apellido': row[2], 'direccion': row[3]} for row in data]
+  conn.close()
+  print(person)
+  print(type(person))
+  return render_template('personas.html', person=person)
+
+
 if __name__ == "__main__":
+  crear_tabla()  # Asegura que la tabla exista
+  insertar_datos()  # Inserta datos solo si la tabla fue creada
   app.run(debug=True, port=5001)
